@@ -1,0 +1,256 @@
+body {
+    min-height: 100vh;
+    margin: 0;
+    background: url("https://picsum.photos/1200");
+    background-repeat: no-repeat;
+    background-size: cover;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+@media(max-width: 800px) {
+    .no-mobile {
+        display: none;
+    }
+}
+
+@media(min-width: 801px) {
+    .only-mobile {
+        display: none;
+    }
+}
+
+section#add-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 40vh;
+}
+
+#add-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#add-panel .time-field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#add-panel .time-field input {
+    min-width: 70%;
+}
+
+.time-now {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 29px;
+    height: 29px;
+    background: white;
+    border: 1px solid black;
+    border-radius: 200px;
+    cursor: pointer;
+    transition: 200ms;
+}
+
+.time-now:hover {
+    background: black;
+    color: white;
+}
+
+.time-now i {
+    font-size: 21px;
+    width: fit-content;
+    height: fit-content;
+    transition: 150ms;
+}
+
+#submit-time {
+    cursor: pointer;
+}
+
+.time-now:hover i {
+    transform: rotate(360deg);
+}
+
+#timetable-area {
+    display: flex;
+    justify-content: center;
+}
+
+#timetable-table {
+    width: 80vw;
+    max-width: 800px;
+    min-width: 500px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid lightgray;
+}
+
+#timetable-table.hide {
+    display: none;
+}
+
+#timetable-table td {
+    text-align: center;
+    padding: 10px 0;
+}
+
+#timetable-table td .date-container {
+    display: flex;
+    flex-direction: column;
+}
+
+#timetable-table td .date-container span {
+    font-size: 0.6rem;
+}
+
+#timetable-table td .time-seconds {
+    font-size: 0.6rem;
+}
+
+#timetable-table .timetable--edit-time {
+    cursor: pointer;
+}
+
+#timetable-export {
+    position: fixed;
+    top: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.8);
+    border-bottom-left-radius: 10px;
+    cursor: grab;
+}
+
+#timetable-export:hover {
+    animation-name: csvDownload;
+    animation-iteration-count: infinite;
+    animation-duration: 500ms;
+}
+
+#timetable-export.hide {
+    display: none;
+}
+
+@media(max-width: 800px) {
+    #timetable-table {
+        width: 100vw;
+        min-width: 300px;
+        border-radius: 0;
+        font-size: 0.8rem;
+        border-left: 0;
+        border-right: 0;
+    }
+
+    #timetable-table span {
+        font-size: 0.8rem;
+    }
+}
+
+modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    z-index: -50;
+    transition: 200ms;
+}
+
+modal.opened {
+    pointer-events: auto;
+    opacity: 1;
+    z-index: 10;
+}
+
+modal #modal-backdrop {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: -1;
+}
+
+modal #edit-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+modal #edit-panel .time-field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+modal #edit-panel .time-field input {
+    min-width: 70%;
+}
+
+modal .time-now {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 29px;
+    height: 29px;
+    background: white;
+    border: 1px solid black;
+    border-radius: 200px;
+    cursor: pointer;
+    transition: 200ms;
+}
+
+modal .time-now:hover {
+    background: black;
+    color: white;
+}
+
+modal .time-now i {
+    font-size: 21px;
+    width: fit-content;
+    height: fit-content;
+    transition: 150ms;
+}
+
+modal #submit-edit-time {
+    cursor: pointer;
+}
+
+modal .time-now:hover i {
+    transform: rotate(360deg);
+}
+
+modal #close-modal {
+    position: absolute;
+    top: 50px;
+    right: 50px;
+    color: white;
+    cursor: pointer;
+}
+
+@keyframes csvDownload {
+    0% {
+        cursor: grab;
+    }
+
+    100% {
+        cursor: grabbing;
+    }
+}
