@@ -106,7 +106,21 @@ class ApiController {
             $results = $statement->fetchAll(PDO::FETCH_CLASS);
 
             if($results) {
-                $output = json_encode(array($results[0]->id, MD5(time() . $password . $results[0]->id)));
+                $user_id = $results[0]->id;
+                $session_hash = MD5(time() . $password . $results[0]->id);
+
+                //Create session on backend system
+                $query = 'INSERT INTO `users_login` (`id`, `creation_date`, `token`, `user_id`) VALUES (NULL, :date, :hash, :userId)';
+                $statement = $database->prepare($query);
+
+                $statement->bindParam(':date', date('Y-m-d'), PDO::PARAM_STR);
+                $statement->bindParam(':hash', $session_hash, PDO::PARAM_STR);
+                $statement->bindParam(':userId', $user_id, PDO::PARAM_STR);
+
+                $statement->execute();
+
+                //Valorize return value with session data
+                $output = json_encode(array($user_id, $session_hash));
             } else {
                 http_response_code(401);
                 $output = 'Invalid username or password';

@@ -14,26 +14,39 @@ class Login {
         $database_connection = $database->getConnection();
 
         if($_COOKIE['ttrack_login']) {
-            // $query = "SELECT * FROM `users_login` WHERE `token` = :token";
-            // $statement = $database_connection->prepare($query);
+            $query = "SELECT * FROM `users_login` WHERE `token` = :token";
+            $statement = $database_connection->prepare($query);
 
-            // $statement->bindParam(':token', $_COOKIE['ttrack_login'], PDO::PARAM_STR);
+            $statement->bindParam(':token', $_COOKIE['ttrack_login'], PDO::PARAM_STR);
             
-            // $statement->execute();
+            $statement->execute();
 
-            // $results = $statement->fetchAll(PDO::FETCH_CLASS);
+            $results = $statement->fetchAll(PDO::FETCH_CLASS);
 
-            // // var_dump($results);
+            if(!$results) {
+                return false;
+            }
 
-            // if(!$results)
-            //     return false;
+            if($results) {
+                $today = date('Y-m-d');
+                $expiration_date = date('Y-m-d', strtotime($results[0]->creation_date . '+30 days'));
 
-            // if($results) {
-            //     $output = json_encode(array($results[0]->id, MD5(time() . $password . $results[0]->id)));
-            // } else {
-            //     http_response_code(401);
-            //     $output = 'Invalid username or password';
-            // }
+                //Check if todays date is over the token's expiration date
+                if($today <= $expiration_date) {
+                    return true;
+                } else {
+                    $query = "DELETE FROM `users_login` WHERE `users_login`.`id` = :id";
+                    $statement = $database_connection->prepare($query);
+
+                    $statement->bindParam(':id', $results[0]->id, PDO::PARAM_STR);
+
+                    $statement->execute();
+
+                    return false;
+                }
+            } else {
+                return false;
+            }
 
             //TODO: check it, damn it
             return true;

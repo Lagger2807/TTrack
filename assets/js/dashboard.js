@@ -7,7 +7,7 @@ $(document).ready(RenderTimeTable());
 $(document).on("click", "#submit-time", function() {
     let date = $("#add-date").val();
     let startTime = $("#add-start-time").val();
-    let endTime = $("#add-start-time").val();
+    let endTime = $("#add-end-time").val();
     let user = common.GetCookieValue("ttrack_user");
 
     if(!date || !startTime || !endTime || !user) {
