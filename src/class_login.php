@@ -4,7 +4,13 @@ include_once __DIR__ . '/../api/src/DBController.php';
 
 class Login {
     function check_login_status() {
-        $database = new DBController("localhost", "ttrack", "root", "A1a4{Z2f?+G!pd]");
+        $env = parse_ini_file(__DIR__ . '/../.env');
+        $db_host = $env['DBAddr'];
+        $db_name = $env['DBName'];
+        $db_user = $env['DBUser'];
+        $db_pass = $env['DBPass'];
+
+        $database = new DBController($db_host, $db_name, $db_user, $db_pass);
         $database_connection = $database->getConnection();
 
         if($_COOKIE['ttrack_login']) {

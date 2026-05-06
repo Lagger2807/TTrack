@@ -1,5 +1,11 @@
 <?php
 
+$env = parse_ini_file(__DIR__ . '/../.env');
+$db_host = $env['DBAddr'];
+$db_name = $env['DBName'];
+$db_user = $env['DBUser'];
+$db_pass = $env['DBPass'];
+
 header("Content-type: application/json; charset=UTF-8");
 
 spl_autoload_register(function ($class) {
@@ -10,7 +16,7 @@ $parsed_url = explode('/', parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH));
 
 $action = $parsed_url[2];
 
-$database = new DBController("localhost", "ttrack", "root", "A1a4{Z2f?+G!pd]");
+$database = new DBController($db_host, $db_name, $db_user, $db_pass);
 $database_connection = $database->getConnection();
 
 $api_controller = new APIController();
