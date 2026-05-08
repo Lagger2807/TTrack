@@ -45,13 +45,38 @@ class Api {
             $.ajax({
                 type: "POST",
                 url: "/api/login/",
-                data: { username, password },
+                data: { 
+                    "username": username,
+                    "password": password
+                },
                 success: function(msg) {
                     resolve(msg);
                 },
                 error: function(error) {
                     reject(error);
                 }
+            });
+        });
+    }
+
+    async Logout(token, userId) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                type: "POST",
+                url: "/api/logout/",
+                data: { 
+                    "token": token,
+                    "userId": userId
+                },
+                success: function(msg) {
+                    resolve(msg);
+                },
+                error: function(error) {
+                    reject(error);
+                }
+            }).done(() => {
+                const common = new Common();
+                common.DeleteLoginCookiesAndRedirect();
             });
         });
     }
@@ -122,5 +147,12 @@ class Common {
         document.cookie = "ttrack_user="+userId+expires+"; path=/";
     
         document.location = "/";
+    }
+
+    DeleteLoginCookiesAndRedirect() {
+        document.cookie = "ttrack_login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "ttrack_user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    
+        document.location = "/login";
     }
 }

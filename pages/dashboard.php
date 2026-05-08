@@ -13,6 +13,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     </head>
     <body>
+        <toolbar>
+            <a href="/"><i class="fa-solid fa-house"></i></a>
+            <a href="/account"><i class="fa-solid fa-user"></i></a>
+        </toolbar>
         <section id="add-area">
             <div id="add-panel">
                 <input id="add-date" type="date" value="<?php echo date('Y-m-d', time()) ?>">

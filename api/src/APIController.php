@@ -19,6 +19,9 @@ class ApiController {
                     case 'login':
                         $response = $this->post_login($database);
                         break;
+                    case 'logout':
+                        $response = $this->post_logout($database);
+                        break;
                     case 'access':
                         $response = $this->post_login_status($database);
                         break;
@@ -41,7 +44,7 @@ class ApiController {
     private function get_times_data(PDO $database) {
         if(is_null($_GET['user'])) {
             http_response_code(400);
-            $output = 'Invalid data'; 
+            $output = json_encode('Invalid data'); 
         } else {
             $user = $_GET['user'];
             $query = 'SELECT `id`,`date`,`start_time`,`end_time` FROM `tracked_times` WHERE `user` = :user ORDER BY `date` DESC';
@@ -62,7 +65,7 @@ class ApiController {
     private function get_full_csv(PDO $database) {
         if(is_null($_GET['user'])) {
             http_response_code(400);
-            $output = 'Invalid data'; 
+            $output = json_encode('Invalid data'); 
         } else {
             $user = $_GET['user'];
             $query = 'SELECT `date`,`start_time`,`end_time` FROM `tracked_times` WHERE `user` = :user ORDER BY `date` DESC';
@@ -92,7 +95,7 @@ class ApiController {
 
         if(is_null($username) || is_null($password)) {
             http_response_code(400);
-            $output = 'Invalid data'; 
+            $output = json_encode('Invalid data'); 
         } else {
             $query = 'SELECT `id` FROM `users` WHERE `name` = :username AND `password` = :password';
             $statement = $database->prepare($query);
@@ -125,7 +128,39 @@ class ApiController {
                 $output = json_encode(array($user_id, $session_hash));
             } else {
                 http_response_code(401);
-                $output = 'Invalid username or password';
+                $output = json_encode('Invalid username or password');
+            }
+        }
+
+        return $output;
+    }
+
+    private function post_logout(PDO $database) {
+        if(empty($_POST)) {
+            $_POST = json_decode(file_get_contents('php://input'), true);
+        }
+
+        $token = $_POST['token'];
+        $user_id = $_POST['userId'];
+
+        if(is_null($token) || is_null($user_id)) {
+            http_response_code(400);
+            $output = json_encode('Invalid data');
+        } else {
+            $query = 'DELETE FROM `users_login` WHERE `token` = :token AND `user_id` = :user_id';
+            $statement = $database->prepare($query);
+
+            $statement->bindParam(':token', $token, PDO::PARAM_STR);
+            $statement->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+
+            $query_action = $statement->execute();
+
+            if($query_action) {
+                http_response_code(200);
+                $output = json_encode('Logout successful');
+            } else {
+                http_response_code(500);
+                $output = json_encode('An error occurred while logging out');
             }
         }
 
@@ -142,7 +177,7 @@ class ApiController {
 
         if(is_null($token) || is_null($user_id)) {
             http_response_code(400);
-            $output = 'Invalid data';
+            $output = json_encode('Invalid data');
         } else {
             $query = 'SELECT * FROM `users_login` WHERE `token` = :token AND `user_id` = :user_id';
             $statement = $database->prepare($query);
@@ -161,15 +196,15 @@ class ApiController {
                 //Check if todays date is over the token's expiration date
                 if($today > $expiration_date) {
                     http_response_code(418);
-                    $output = 'Token expired';
+                    $output = json_encode('Token expired');
                 } else {
                     http_response_code(200);
-                    $output = 'Valid token';
+                    $output = json_encode('Valid token');
                 }
                 
             } else {
                 http_response_code(401);
-                $output = 'Invalid access token';
+                $output = json_encode('Invalid access token');
             }
         }
 
@@ -186,7 +221,7 @@ class ApiController {
 
         if(is_null($username) || is_null($password)) {
             http_response_code(400);
-            $output = "Invalid data";
+            $output = json_encode('Invalid data');
         } else {
             $query = "INSERT INTO `users`(`id`, `name`, `password`) VALUES (NULL, :name, :password)";
             $statement = $database->prepare($query);
@@ -197,10 +232,10 @@ class ApiController {
             $statement->bindParam(':password', $hashed_psw, PDO::PARAM_STR);
 
             $query_action = $statement->execute();
-            $output = $query_action;
+            $output = json_encode('User created successfully');
         }
 
-        $output = '';
+        $output = json_encode('');
 
         return $output;
     }
@@ -217,7 +252,7 @@ class ApiController {
 
         if(is_null($date) || is_null($start_time) || is_null($end_time) || is_null($user_id)) {
             http_response_code(400);
-            $output = 'Invalid data';
+            $output = json_encode('Invalid data');
         } else {
             $query = 'INSERT INTO `tracked_times` (`id`, `date`, `start_time`, `end_time`, `user`) VALUES (NULL, :date, :start_time, :end_time, :user)';
             $statement = $database->prepare($query);
@@ -228,7 +263,7 @@ class ApiController {
             $statement->bindParam(':user', $user_id, PDO::PARAM_STR);
 
             $query_action = $statement->execute();
-            $output = $query_action;
+            $output = json_encode($query_action);
         }
 
         return $output;
@@ -249,7 +284,7 @@ class ApiController {
 
         if((is_null($id) || $id == '') || is_null($date) || is_null($start_time) || is_null($end_time) || is_null($user_id)) {
             http_response_code(400);
-            $output = 'Invalid data';
+            $output = json_encode('Invalid data');
         } else {
             $query = 'UPDATE `tracked_times` SET `date` = :date, `start_time` = :start_time, `end_time` = :end_time WHERE `id` = :id AND `user` = :user';
             $statement = $database->prepare($query);
@@ -261,7 +296,7 @@ class ApiController {
             $statement->bindParam(':user', $user_id, PDO::PARAM_STR);
 
             $query_action = $statement->execute();
-            $output = $query_action;
+            $output = json_encode($query_action);
         }
 
         return $output;

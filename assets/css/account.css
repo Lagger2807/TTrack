@@ -1,0 +1,10 @@
+body {
+    min-height: 100vh;
+    background: #ffffff;
+    background: linear-gradient(153deg,rgba(212, 212, 212, 1) 0%, rgba(89, 194, 255, 1) 100%);
+    background-size: 200%;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    margin: 0;
+    animation: bgrotation 10s linear infinite;
+}

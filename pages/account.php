@@ -5,6 +5,10 @@ $common = new Common();
 
 $user_id = $common->get_user_accesses();
 $user = $common->get_user_data();
+
+$greetings = ['Ciao', 'Salve', 'Benvenuto'];
+$greeting = $greetings[array_rand($greetings)];
+
 ?>
 
 <!DOCTYPE html>
@@ -22,13 +26,26 @@ $user = $common->get_user_data();
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <p>Ciao, <?php echo $user->name; ?></p>
-        <p>Le tue attività:</p>
-        <div>
-            <?php foreach($user_id as $access) { ?>
-                <p><?php echo $access->creation_date; ?></p>
-            <?php } ?>
-        </div>
-        <button id="logout-button">Logout</button>
+        <toolbar>
+            <a href="/"><i class="fa-solid fa-house"></i></a>
+            <a href="/account"><i class="fa-solid fa-user"></i></a>
+        </toolbar>
+        <section>
+            <div class="tile-background">
+                <span><?php echo $greeting . ', ' . $user->name; ?></span>
+                
+            </div>
+        </section>
+        <section>
+            <div class="tile-background">
+                <p>Le tue attività:</p>
+                <div>
+                    <?php foreach($user_id as $access) { ?>
+                        <p><?php echo $access->creation_date; ?></p>
+                    <?php } ?>
+                </div>
+                <button id="logout-button">Logout</button>
+            </div>
+        </section>
     </body>
 </html>
