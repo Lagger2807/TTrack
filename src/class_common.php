@@ -63,6 +63,37 @@ Class Common {
             return false;
         }
     }
+
+    function get_user_data($user_id = null) {
+        if(!$user_id) {
+            $user_id = $this->get_user_id();
+        }
+
+        $database_connection = (new TTDB())->get_connection();
+
+        if($user_id) {
+            $query = "SELECT `name` FROM `users` WHERE `id` = :user";
+            $statement = $database_connection->prepare($query);
+
+            $statement->bindParam(':user', $user_id, PDO::PARAM_STR);
+            
+            $statement->execute();
+
+            $results = $statement->fetchAll(PDO::FETCH_CLASS);
+
+            if(!$results) {
+                return false;
+            }
+
+            if($results) {
+                return $results[0];
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 }
 
 Class TTDB {
