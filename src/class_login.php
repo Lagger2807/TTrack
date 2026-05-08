@@ -47,9 +47,6 @@ class Login {
             } else {
                 return false;
             }
-
-            //TODO: check it, damn it
-            return true;
         } else {
             return false;
         }
