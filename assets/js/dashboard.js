@@ -55,11 +55,16 @@ $(document).on("click", "#close-modal", function() {
 
 $(document).on("click", "#submit-edit-time", function() {
     let id = $(this).attr("data-time");
-    let timeColumns = $("tr[data-time="+id+"] td");
-    let date = timeColumns[0].innerText;
-    let startTime = timeColumns[1].innerText;
-    let endTime = timeColumns[2].innerText;
+    let date = $("#edit-date").val();
+    let startTime = $("#edit-start-time").val();
+    let endTime = $("#edit-end-time").val();
     let user = common.GetCookieValue("ttrack_user");
+
+    console.log("ID:", id);
+    console.log("Date:", date);
+    console.log("Start Time:", startTime);
+    console.log("End Time:", endTime);
+    console.log("User:", user);
 
     if(!id || id == "") {
         alert("Impossibile inviare i dati: inserimento non valido");
