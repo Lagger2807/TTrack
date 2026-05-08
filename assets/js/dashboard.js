@@ -15,8 +15,14 @@ $(document).on("click", "#submit-time", function() {
         return;
     }
 
-    api.AddTime(date, startTime, endTime, user);
-    window.location.reload();
+    api.AddTime(date, startTime, endTime, user)
+        .then(function() {
+            window.location.reload();
+        })
+        .catch(function(error) {
+            console.error("Errore durante l'invio:", error);
+            alert("Errore durante l'invio dei dati, Riprova.");
+        });
 });
 
 $(document).on("click", ".time-now", function() {
@@ -65,14 +71,21 @@ $(document).on("click", "#submit-edit-time", function() {
         }
     }
 
-    api.EditTime(id, date, startTime, endTime, user);
-    alert("Timbratura modificata");
+    api.EditTime(id, date, startTime, endTime, user)
+        .then(function() {
+            alert("Timbratura modificata");
 
-    $("modal").removeClass("opened");
-    $("modal #edit-date").val("");
-    $("modal #edit-start-time").val("");
-    $("modal #edit-end-time").val("");
-    window.location.reload();
+            $("modal").removeClass("opened");
+            $("modal #edit-date").val("");
+            $("modal #edit-start-time").val("");
+            $("modal #edit-end-time").val("");
+            window.location.reload();
+        })
+        .catch(function(error) {
+            console.error("Errore durante l'invio:", error);
+            alert("Errore durante la modifica dei dati, Riprova.");
+        });
+    
 });
 
 $(document).on("click", "#timetable-export", function() {
