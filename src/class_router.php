@@ -1,6 +1,9 @@
 <?php
 
 class Router {
+    function __construct() {   
+    }
+
     private $routes = [];
 
     public function route(string $path, callable $callback) {

@@ -3,6 +3,9 @@
 include_once __DIR__ . '/../api/src/DBController.php';
 
 class Login {
+    function __construct() {   
+    }
+
     function check_login_status() {
         $env = parse_ini_file(__DIR__ . '/../.env');
         $db_host = $env['DBAddr'];

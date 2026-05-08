@@ -11,6 +11,10 @@ $router->route('/', function($router) {
     $router->load_page('dashboard.php');
 });
 
+$router->route('/account', function($router) {
+    $router->load_page('account.php');
+});
+
 $router->route('/login', function($router) {
     $router->load_page('login.php');
 });

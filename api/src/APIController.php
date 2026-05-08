@@ -2,6 +2,7 @@
 
 class ApiController {
     public function process_request(?PDO $database, string $method, ?string $action = null) {
+        $response = '';
         switch($method) {
             case 'GET':
                 switch($action) {
@@ -106,6 +107,7 @@ class ApiController {
             $results = $statement->fetchAll(PDO::FETCH_CLASS);
 
             if($results) {
+                $today = date('Y-m-d');
                 $user_id = $results[0]->id;
                 $session_hash = MD5(time() . $password . $results[0]->id);
 
@@ -113,7 +115,7 @@ class ApiController {
                 $query = 'INSERT INTO `users_login` (`id`, `creation_date`, `token`, `user_id`) VALUES (NULL, :date, :hash, :userId)';
                 $statement = $database->prepare($query);
 
-                $statement->bindParam(':date', date('Y-m-d'), PDO::PARAM_STR);
+                $statement->bindParam(':date', $today, PDO::PARAM_STR);
                 $statement->bindParam(':hash', $session_hash, PDO::PARAM_STR);
                 $statement->bindParam(':userId', $user_id, PDO::PARAM_STR);
 
