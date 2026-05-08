@@ -296,7 +296,7 @@ class ApiController {
             $statement->bindParam(':user', $user_id, PDO::PARAM_STR);
 
             $query_action = $statement->execute();
-            $output = $query_action;
+            $output = json_encode($query_action);
         }
 
         return $output;
