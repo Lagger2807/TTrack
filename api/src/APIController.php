@@ -301,5 +301,29 @@ class ApiController {
 
         return $output;
     }
+
+    private function post_edit_username(PDO $database) {
+        if(empty($_POST)) {
+            $_POST = json_decode(file_get_contents('php://input'), true);
+        }
+
+        $user_id = $_POST['user_id'];
+        $new_username = $_POST['username'];
+
+        $output = '';
+
+        if(is_null($new_username) || $new_username == '' || is_null($user_id) || $user_id == '') {
+            http_response_code(400);
+            $output = json_encode('Invalid data');
+        } else {
+            $query = 'UPDATE `users` SET `name` = :name';
+            $statement = $database->prepare($query);
+
+            $statement->bindParam(':name', $new_username, PDO::PARAM_STR);
+
+            $query_action = $statement->execute();
+            $output = json_encode($query_action);
+        }
+    }
     #endregion
 }
