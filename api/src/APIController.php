@@ -324,6 +324,8 @@ class ApiController {
             $query_action = $statement->execute();
             $output = json_encode($query_action);
         }
+        
+        return $output;
     }
     #endregion
 }
