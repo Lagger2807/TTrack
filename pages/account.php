@@ -49,9 +49,9 @@ $OSes = [
         <section>
             <div class="tile-background">
                 <p>I tuoi accessi:</p>
-                <div>
+                <div id="login-history">
                     <?php foreach($user_id as $access) { ?>
-                        <p>
+                        <p class="login-entry">
                             <?php echo $access->creation_date; ?> da:
                             <?php if($access->user_agent != '') {
                                 echo get_OS_icon($access->user_agent, $OSes);
