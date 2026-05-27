@@ -40,14 +40,15 @@ class Api {
         });
     }
 
-    async Login(username, password) {
+    async Login(username, password, userAgent) {
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: "POST",
                 url: "/api/login/",
                 data: { 
                     "username": username,
-                    "password": password
+                    "password": password,
+                    "userAgent": userAgent
                 },
                 success: function(msg) {
                     resolve(msg);
@@ -77,6 +78,47 @@ class Api {
             }).done(() => {
                 const common = new Common();
                 common.DeleteLoginCookiesAndRedirect();
+            });
+        });
+    }
+
+    async LogoutAll(userId) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                type: "POST",
+                url: "/api/logout-all/",
+                data: {  
+                    "userId": userId
+                },
+                success: function(msg) {
+                    resolve(msg);
+                },
+                error: function(error) {
+                    reject(error);
+                }
+            }).done(() => {
+                const common = new Common();
+                common.DeleteLoginCookiesAndRedirect();
+            });
+        });
+    }
+
+    async UpdateName(token, userId, newName) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                type: "POST",
+                url: "/api/edit-username/",
+                data: { 
+                    "token": token,
+                    "userId": userId,
+                    "newName": newName
+                },
+                success: function(msg) {
+                    resolve(msg);
+                },
+                error: function(error) {
+                    reject(error);
+                }
             });
         });
     }

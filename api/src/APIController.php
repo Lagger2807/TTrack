@@ -22,8 +22,14 @@ class ApiController {
                     case 'logout':
                         $response = $this->post_logout($database);
                         break;
+                    case 'logout-all':
+                        $response = $this->post_logout_all($database);
+                        break;
                     case 'access':
                         $response = $this->post_login_status($database);
+                        break;
+                    case 'edit-username':
+                        $response = $this->post_edit_username($database);
                         break;
                     case 'add-time':
                         $response = $this->post_add_time($database);
@@ -92,6 +98,7 @@ class ApiController {
         
         $username = $_POST['username'];
         $password = $_POST['password'];
+        $useragent = $_POST['userAgent'];
 
         if(is_null($username) || is_null($password)) {
             http_response_code(400);
@@ -115,12 +122,13 @@ class ApiController {
                 $session_hash = MD5(time() . $password . $results[0]->id);
 
                 //Create session on backend system
-                $query = 'INSERT INTO `users_login` (`id`, `creation_date`, `token`, `user_id`) VALUES (NULL, :date, :hash, :userId)';
+                $query = 'INSERT INTO `users_login` (`id`, `creation_date`, `token`, `user_id`, `user_agent`) VALUES (NULL, :date, :hash, :userId, :userAgent)';
                 $statement = $database->prepare($query);
 
                 $statement->bindParam(':date', $today, PDO::PARAM_STR);
                 $statement->bindParam(':hash', $session_hash, PDO::PARAM_STR);
                 $statement->bindParam(':userId', $user_id, PDO::PARAM_STR);
+                $statement->bindParam(':userAgent', $useragent, PDO::PARAM_STR);
 
                 $statement->execute();
 
@@ -151,6 +159,36 @@ class ApiController {
             $statement = $database->prepare($query);
 
             $statement->bindParam(':token', $token, PDO::PARAM_STR);
+            $statement->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+
+            $query_action = $statement->execute();
+
+            if($query_action) {
+                http_response_code(200);
+                $output = json_encode('Logout successful');
+            } else {
+                http_response_code(500);
+                $output = json_encode('An error occurred while logging out');
+            }
+        }
+
+        return $output;
+    }
+
+    private function post_logout_all(PDO $database) {
+        if(empty($_POST)) {
+            $_POST = json_decode(file_get_contents('php://input'), true);
+        }
+
+        $user_id = $_POST['userId'];
+
+        if(is_null($user_id)) {
+            http_response_code(400);
+            $output = json_encode('Invalid data');
+        } else {
+            $query = 'DELETE FROM `users_login` WHERE `user_id` = :user_id';
+            $statement = $database->prepare($query);
+
             $statement->bindParam(':user_id', $user_id, PDO::PARAM_STR);
 
             $query_action = $statement->execute();
@@ -307,19 +345,22 @@ class ApiController {
             $_POST = json_decode(file_get_contents('php://input'), true);
         }
 
-        $user_id = $_POST['user_id'];
-        $new_username = $_POST['username'];
+        $token = $_POST['token'];
+        $user_id = $_POST['userId'];
+        $new_username = $_POST['newName'];
 
         $output = '';
 
-        if(is_null($new_username) || $new_username == '' || is_null($user_id) || $user_id == '') {
+        if(is_null($token) || $token == '' || is_null($new_username) || $new_username == '' || is_null($user_id) || $user_id == '') {
             http_response_code(400);
             $output = json_encode('Invalid data');
         } else {
-            $query = 'UPDATE `users` SET `name` = :name';
+            $query = 'UPDATE `users` INNER JOIN `users_login` ON `users_login`.`user_id` = `users`.`id` SET `users`.`name` = :name WHERE `users_login`.`token` = :token AND `users_login`.`user_id` = :user_id';
             $statement = $database->prepare($query);
 
             $statement->bindParam(':name', $new_username, PDO::PARAM_STR);
+            $statement->bindParam(':token', $token, PDO::PARAM_STR);
+            $statement->bindParam(':user_id', $user_id, PDO::PARAM_STR);
 
             $query_action = $statement->execute();
             $output = json_encode($query_action);

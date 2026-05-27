@@ -41,7 +41,7 @@ Class Common {
         $database_connection = (new TTDB())->get_connection();
         
         if($user_id) {
-            $query = "SELECT `creation_date` FROM `users_login` WHERE `user_id` = :user";
+            $query = "SELECT `creation_date`,`token`,`user_agent` FROM `users_login` WHERE `user_id` = :user";
             $statement = $database_connection->prepare($query);
 
             $statement->bindParam(':user', $user_id, PDO::PARAM_STR);

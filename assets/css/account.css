@@ -8,3 +8,12 @@ body {
     margin: 0;
     animation: bgrotation 10s linear infinite;
 }
+
+#edit-name-button {
+    transform: scale(0.8);
+}
+
+#logout-all-button {
+    background-color: red;
+    color: white;
+}

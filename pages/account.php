@@ -9,6 +9,16 @@ $user = $common->get_user_data();
 $greetings = ['Ciao', 'Salve', 'Benvenuto'];
 $greeting = $greetings[array_rand($greetings)];
 
+$OSes = [
+    'Windows' => '<i class="fa-brands fa-windows"></i>',
+    'Linux' => '<i class="fa-brands fa-linux"></i>',
+    'Mac OS' => '<i class="fa-brands fa-apple"></i>',
+    'Android' => '<i class="fa-brands fa-android"></i>',
+    'iOS' => '<i class="fa-brands fa-apple"></i>',
+    'iPhone' => '<i class="fa-brands fa-apple"></i>',
+    'iPad' => '<i class="fa-brands fa-apple"></i>'
+];
+
 ?>
 
 <!DOCTYPE html>
@@ -33,19 +43,44 @@ $greeting = $greetings[array_rand($greetings)];
         <section>
             <div class="tile-background">
                 <span><?php echo $greeting . ', ' . $user->name; ?></span>
-                
+                <span><button id="edit-name-button" onclick="EditName()"><i class="fa-regular fa-pen-to-square"></i></button></span>
             </div>
         </section>
         <section>
             <div class="tile-background">
-                <p>Le tue attività:</p>
+                <p>I tuoi accessi:</p>
                 <div>
                     <?php foreach($user_id as $access) { ?>
-                        <p><?php echo $access->creation_date; ?></p>
+                        <p>
+                            <?php echo $access->creation_date; ?> da:
+                            <?php if ($access->token === $_COOKIE['ttrack_login']) {
+                                echo '<strong>(Questo dispositivo)</strong>';
+                            }
+                            ?>
+                            <?php if($access->user_agent != '') {
+                                echo getOSIcon($access->user_agent, $OSes);
+                                echo $access->user_agent;
+                            } ?>
+                        </p>
                     <?php } ?>
                 </div>
-                <button id="logout-button">Logout</button>
+                <button id="logout-button" onclick="Logout()">Logout</button>
+                <button id="logout-all-button" onclick="LogoutAll()">Logout da tutti i dispositivi</button>
             </div>
         </section>
     </body>
 </html>
+
+<?php
+
+function getOSIcon($userAgent, $OSes) {
+    foreach ($OSes as $os => $icon) {
+        if (strpos(strtolower($userAgent), strtolower($os)) !== false) {
+            return $icon;
+        }
+    }
+
+    return '<i class="fa-solid fa-question"></i>'; // fallback icon
+}
+
+?>
