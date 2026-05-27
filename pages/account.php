@@ -10,13 +10,13 @@ $greetings = ['Ciao', 'Salve', 'Benvenuto'];
 $greeting = $greetings[array_rand($greetings)];
 
 $OSes = [
-    'Windows' => '<i class="fa-brands fa-windows"></i>',
-    'Linux' => '<i class="fa-brands fa-linux"></i>',
-    'Mac OS' => '<i class="fa-brands fa-apple"></i>',
-    'Android' => '<i class="fa-brands fa-android"></i>',
-    'iOS' => '<i class="fa-brands fa-apple"></i>',
-    'iPhone' => '<i class="fa-brands fa-apple"></i>',
-    'iPad' => '<i class="fa-brands fa-apple"></i>'
+    'Windows' => '<i style="color: #0078D4;" class="fa-brands fa-windows"></i>',
+    'Linux' => '<i style="color: #101820;" class="fa-brands fa-linux"></i>',
+    'Mac OS' => '<i style="color: #101820;" class="fa-brands fa-apple"></i>',
+    'Android' => '<i style="color: #3DDC84;" class="fa-brands fa-android"></i>',
+    'iOS' => '<i style="color: #101820;" class="fa-brands fa-apple"></i>',
+    'iPhone' => '<i style="color: #101820;" class="fa-brands fa-apple"></i>',
+    'iPad' => '<i style="color: #101820;" class="fa-brands fa-apple"></i>'
 ];
 
 ?>
@@ -53,14 +53,16 @@ $OSes = [
                     <?php foreach($user_id as $access) { ?>
                         <p>
                             <?php echo $access->creation_date; ?> da:
+                            <?php if($access->user_agent != '') {
+                                echo get_OS_icon($access->user_agent, $OSes);
+                                echo get_formatted_user_agent($access->user_agent);
+                            } else {
+                                echo 'Dispositivo sconosciuto';
+                            } ?>
                             <?php if ($access->token === $_COOKIE['ttrack_login']) {
                                 echo '<strong>(Questo dispositivo)</strong>';
                             }
                             ?>
-                            <?php if($access->user_agent != '') {
-                                echo getOSIcon($access->user_agent, $OSes);
-                                echo $access->user_agent;
-                            } ?>
                         </p>
                     <?php } ?>
                 </div>
@@ -73,7 +75,7 @@ $OSes = [
 
 <?php
 
-function getOSIcon($userAgent, $OSes) {
+function get_OS_icon($userAgent, $OSes) {
     foreach ($OSes as $os => $icon) {
         if (strpos(strtolower($userAgent), strtolower($os)) !== false) {
             return $icon;
@@ -81,6 +83,21 @@ function getOSIcon($userAgent, $OSes) {
     }
 
     return '<i class="fa-solid fa-question"></i>'; // fallback icon
+}
+
+function get_formatted_user_agent($userAgent) {
+    $browser = strpos($userAgent, 'Firefox') !== false ? 'Firefox' :
+               (strpos($userAgent, 'Chrome') !== false ? 'Chrome' :
+               (strpos($userAgent, 'Safari') !== false ? 'Safari' :
+               (strpos($userAgent, 'Edge') !== false ? 'Edge' : 'Browser sconosciuto')));
+
+    $OS = strpos($userAgent, 'Windows') !== false ? 'Windows' :
+          (strpos($userAgent, 'Linux') !== false ? 'Linux' :
+          (strpos($userAgent, 'Mac OS') !== false ? 'Mac OS' :
+          (strpos($userAgent, 'Android') !== false ? 'Android' :
+          (strpos($userAgent, 'iOS') !== false ? 'iOS' : 'Sistema operativo sconosciuto'))));
+
+    return $browser . ' su ' . $OS;
 }
 
 ?>
