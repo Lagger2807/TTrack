@@ -64,8 +64,8 @@ $OSes = [
                         </p>
                     <?php } ?>
                 </div>
-                <button id="logout-button" onclick="Logout()">Logout</button>
-                <button id="logout-all-button" onclick="LogoutAll()">Logout da tutti i dispositivi</button>
+                <button id="logout-button" onclick="Logout()">Disconettiti</button>
+                <button id="logout-all-button" onclick="LogoutAll()">Disconnetti da tutti i dispositivi</button>
             </div>
         </section>
     </body>
