@@ -104,7 +104,7 @@ class ApiController {
             http_response_code(400);
             $output = json_encode('Invalid data'); 
         } else {
-            $query = 'SELECT `id` FROM `users` WHERE `name` = :username AND `password` = :password';
+            $query = 'SELECT `id` FROM `users` WHERE `login_name` = :username AND `password` = :password';
             $statement = $database->prepare($query);
 
             $hashed_psw = MD5($password);
