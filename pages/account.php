@@ -52,17 +52,17 @@ $OSes = [
                 <div id="login-history">
                     <?php foreach($user_id as $access) { ?>
                         <p class="login-entry">
-                            <?php echo $access->creation_date; ?> da:
+                            <?php if ($access->token === $_COOKIE['ttrack_login']) {
+                                echo '<strong class="current-device">Dispositivo corrente</strong>';
+                            }
+                            ?>
                             <?php if($access->user_agent != '') {
                                 echo get_OS_icon($access->user_agent, $OSes);
                                 echo get_formatted_user_agent($access->user_agent);
                             } else {
                                 echo 'Dispositivo sconosciuto';
                             } ?>
-                            <?php if ($access->token === $_COOKIE['ttrack_login']) {
-                                echo '<strong>(Questo dispositivo)</strong>';
-                            }
-                            ?>
+                            <span class="login-date"><?php echo $access->creation_date; ?></span>
                         </p>
                     <?php } ?>
                 </div>

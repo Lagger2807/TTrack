@@ -25,7 +25,6 @@ toolbar a {
 
 @media(max-width: 800px) {
     toolbar {
-        width: 100%;
         padding: 0.5rem;
     }
 }
