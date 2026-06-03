@@ -26,6 +26,10 @@ body {
     font-size: 0.8rem;
 }
 
+#login-history .login-entry i {
+    margin-right: 5px;
+}
+
 #login-history .login-entry .current-device {
     display: block;
     font-size: 0.6rem;
