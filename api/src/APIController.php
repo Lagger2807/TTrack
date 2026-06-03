@@ -255,25 +255,29 @@ class ApiController {
         }
 
         $username = $_POST['username'];
+        $email = $_POST['email'];
+        $display_name = $_POST['display_name'];
         $password = $_POST['password'];
 
         if(is_null($username) || is_null($password)) {
             http_response_code(400);
             $output = json_encode('Invalid data');
         } else {
-            $query = "INSERT INTO `users`(`id`, `name`, `password`) VALUES (NULL, :name, :password)";
+            $query = "INSERT INTO `users`(`id`, `login_name`, `email`, `name` `password`) VALUES (NULL, :name, :email, :displayname :password)";
             $statement = $database->prepare($query);
 
             $hashed_psw = MD5($password);
 
             $statement->bindParam(':name', $username, PDO::PARAM_STR);
+            $statement->bindParam(':email', $email, PDO::PARAM_STR);
+            $statement->bindParam(':displayname', $display_name, PDO::PARAM_STR);
             $statement->bindParam(':password', $hashed_psw, PDO::PARAM_STR);
 
             $query_action = $statement->execute();
+
+            http_response_code(200);
             $output = json_encode('User created successfully');
         }
-
-        $output = json_encode('');
 
         return $output;
     }
