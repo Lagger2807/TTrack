@@ -103,6 +103,26 @@ class Api {
         });
     }
 
+    async Signup(username, email, password) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                type: "POST",
+                url: "/api/signup/",
+                data: { 
+                    "username": username,
+                    "email": email,
+                    "password": password
+                },
+                success: function(msg) {
+                    resolve(msg);
+                },
+                error: function(error) {
+                    reject(error);
+                }
+            });
+        });
+    }
+
     async UpdateName(token, userId, newName) {
         return new Promise((resolve, reject) => {
             $.ajax({

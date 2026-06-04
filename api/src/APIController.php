@@ -25,6 +25,9 @@ class ApiController {
                     case 'logout-all':
                         $response = $this->post_logout_all($database);
                         break;
+                    case 'signup':
+                        $response = $this->post_signup($database);
+                        break;
                     case 'access':
                         $response = $this->post_login_status($database);
                         break;
@@ -256,27 +259,40 @@ class ApiController {
 
         $username = $_POST['username'];
         $email = $_POST['email'];
-        $display_name = $_POST['display_name'];
         $password = $_POST['password'];
 
-        if(is_null($username) || is_null($password)) {
+        if(is_null($username) || is_null($email) || is_null($password)) {
             http_response_code(400);
             $output = json_encode('Invalid data');
         } else {
-            $query = "INSERT INTO `users`(`id`, `login_name`, `email`, `name` `password`) VALUES (NULL, :name, :email, :displayname :password)";
+            $query = 'SELECT `id` FROM `users` WHERE `login_name` = :username OR `email` = :email';
             $statement = $database->prepare($query);
+
+            $statement->bindParam(':username', $username, PDO::PARAM_STR);
+            $statement->bindParam(':email', $email, PDO::PARAM_STR);
+
+            $statement->execute();
+
+            $results = $statement->fetchAll(PDO::FETCH_CLASS);
+
+            if($results) {
+                http_response_code(400);
+                $output = json_encode('User already exists');
+            } else {
+                $query = "INSERT INTO `users`(`id`, `login_name`, `email`, `name`, `password`) VALUES (NULL, :name, :email, :displayname, :password)";
+                $statement = $database->prepare($query);
 
             $hashed_psw = MD5($password);
 
             $statement->bindParam(':name', $username, PDO::PARAM_STR);
             $statement->bindParam(':email', $email, PDO::PARAM_STR);
-            $statement->bindParam(':displayname', $display_name, PDO::PARAM_STR);
+            $statement->bindParam(':displayname', $username, PDO::PARAM_STR);
             $statement->bindParam(':password', $hashed_psw, PDO::PARAM_STR);
 
             $query_action = $statement->execute();
-
             http_response_code(200);
-            $output = json_encode('User created successfully');
+            $output = json_encode($query_action);
+            }
         }
 
         return $output;

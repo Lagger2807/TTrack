@@ -15,12 +15,15 @@
         <div id="login-box">
             <h1>Accedi</h1>
             <div id="login-form">
-                <input id="user" type="text">
-                <input id="password" type="password">
+                <input type="text" placeholder="Username" id="user" name="user" required>
+                <input type="password" placeholder="Password" id="password" name="password" required>
                 <button type="submit">Accedi</button>
             </div>
         </div>
     
-        <!--<span>Non hai un account? <a href="/signup">Creane uno ora</a></span>-->
+        <div id="signup-box">
+            <h3>Non hai un account?</h3>
+            <button onclick="window.location.href='/signup'">Creane uno ora</button>
+        </div>
     </body>
 </html>
