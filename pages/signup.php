@@ -21,5 +21,10 @@
                 <button type="submit">Registrati</button>
             </div>
         </div>
+
+        <div id="login-box">
+            <h3>Hai già un account?</h3>
+            <button onclick="window.location.href='/login'">Accedi</button>
+        </div>
     </body>
 </html>
