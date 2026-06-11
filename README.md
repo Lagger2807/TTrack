@@ -29,15 +29,75 @@ A lightweight PHP-based time tracking application for managing work sessions, mo
 
 ## Requirements
 
-* PHP 8.0+
+* PHP 8.0 or newer
 * MySQL or MariaDB
-* Apache, Nginx, or another PHP-compatible web server
+* Apache with mod_rewrite enabled
+* Write permissions for the application root directory
 
 ---
 
 ## Installation
 
-<ins>Dedicated installer + instructions coming soon</ins>
+Before installing, ensure your server meets the requirements:
+
+### Download
+
+Clone or download the repository and upload it to your web server.
+
+* git clone https://github.com/your-username/your-repository.git
+* Open your browser and navigate to your installation directory
+* Enter your database connection details
+* Click Install.
+
+The installer will automatically:
+
+Create the .env configuration file
+Generate the required .htaccess file
+Create the application database (if it does not already exist)
+Create all required tables
+After Installation
+
+Then delete or rename the installer directory after installation.
+
+Example:
+
+mv installer installer_backup
+
+or
+
+rm -rf installer
+
+Once the installer has been removed, refresh the application in your browser.
+
+### Troubleshooting
+
+Installer cannot write files
+
+Ensure PHP has write permissions for the application root directory. The installer must be able to create:
+
+.env
+.htaccess
+Database creation fails
+
+Verify that the database user has sufficient privileges:
+
+CREATE DATABASE
+CREATE TABLE
+ALTER
+INSERT
+UPDATE
+DELETE
+SELECT
+
+Page returns 404 errors
+
+Make sure Apache's mod_rewrite module is enabled and .htaccess files are allowed by your virtual host configuration.
+
+Example Apache configuration:
+
+<Directory "/var/www/html">
+    AllowOverride All
+</Directory>
 
 ## Project Structure
 
