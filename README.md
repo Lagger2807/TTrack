@@ -81,12 +81,12 @@ Database creation fails
 
 Verify that the database user has sufficient privileges:
 
-CREATE DATABASE
-CREATE TABLE
-ALTER
-INSERT
-UPDATE
-DELETE
+CREATE DATABASE | 
+CREATE TABLE | 
+ALTER | 
+INSERT | 
+UPDATE | 
+DELETE | 
 SELECT
 
 Page returns 404 errors
