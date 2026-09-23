@@ -51,11 +51,10 @@ Clone or download the repository and upload it to your web server.
 
 The installer will automatically:
 
-Create the .env configuration file
-Generate the required .htaccess file
-Create the application database (if it does not already exist)
-Create all required tables
-After Installation
+* Create the .env configuration file
+* Generate the required .htaccess file
+* Create the application database (if it does not already exist)
+* Create all required tables after Installation
 
 Then delete or rename the installer directory after installation.
 
